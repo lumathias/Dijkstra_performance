@@ -12,71 +12,71 @@ The experiment measures the **execution time** and **estimated CO₂ emissions**
 
 ---
 
-## Descrição do Problema
+## Problem Description
 
-1. **Geração de grafos ponderados e conectados** com [NetworkX](https://networkx.org/) em diferentes tamanhos (até 100 000 nós).  
-2. **Seleção de 5 nós aleatórios** e cálculo do menor caminho desses nós até todos os outros utilizando:
-   - Dijkstra Clássico (versão `O(V²)`)
-   - Dijkstra com Min-Heap (versão `O((V + E) log V)`)
-   - Algoritmo de referência do *NetworkX* (`nx.single_source_dijkstra_path_length`)
-3. **Repetição de 15 – 20 vezes** por tamanho do grafo, com novos nós iniciais a cada rodada.  
-4. **Coleta de métricas:**  
-   - Tempo total de execução (segundos)  
-   - Emissões estimadas de CO₂ (kilogramas)  
-5. **Cálculo estatístico** de médias e desvios-padrão.  
-6. **Geração de gráficos comparativos** de tempo e emissões.
+1. **Generating weighted and connected graphs** with [NetworkX](https://networkx.org/) in different sizes (up to 100,000 nodes).   
+2. **Selecting 5 random 5 nodes** and calculating the shortest path from these nodes to all others using: 
+   - Classic Dijkstra (`O(V²)` version)  
+   - Dijkstra with Min-Heap (`O((V + E) log V`) version)
+   - *NetworkX* reference algorithm (`nx.single_source_dijkstra_path_length`)
+3. **Repeating 15–20 times** per graph size, with new initial nodes each round.
+4. **Metrics collection:**
+   - Total execution time (seconds)
+   - Estimated CO₂ emissions (kilograms)
+5. **Statistical calculation** of means and standard deviations.  
+6. **Generating comparative graphs** of time and emissions.
 
 ---
 
-## Configuração Experimental
+## Experimental Setup
 
-| Item | Valor |
+| Item | Value |
 |------|--------|
-| **Tamanhos de grafos** | `[100, 500, 1 000, 5 000, 10 000, 50 000, 100 000]` |
-| **Repetições** | 15 – 20 por tamanho |
-| **Seeds fixas** | Para `numpy` e `random` |
-| **Geração de grafos** | `nx.gnp_random_graph(n, p)` com pesos positivos (1 – 10) |
-| **Garantia** | Conectividade usando componente gigante |
-| **Métricas** | Tempo médio, desvio padrão, CO₂ médio |
+| **Graph sizes** | `[100, 500, 1,000, 5,000, 10,000, 50,000, 100,000]` |
+| **Repetitions** | 15–20 per size |
+| **Fixed seeds** | For `numpy` and `random` |
+| **Graph generator** | `nx.gnp_random_graph(n, p)` with positive weights (1–10) |
+| **Assurance** | Connectivity using giant component |
+| **Metrics** | Average time, standard deviation, average CO₂ |
 
 ---
 
-## Resultados Esperados
+## Expected Results
 
-| Situação | Dijkstra Clássico | Dijkstra Min-Heap |
+| Situation | Classic Dijkstra | Min-Heap Dijkstra |
 |-----------|------------------|------------------|
-| **Grafo esparso** | Lentidão crescente `O(V²)` | Muito mais eficiente `O(E log V)` |
-| **Grafo denso** | Desempenho semelhante | Leve sobrecarga do heap |
-| **Escalabilidade** | Até ~10 000 nós | Até 100 000+ nós |
-| **Pegada de CO₂** | Maior consumo energético | Menor emissão (menor tempo de CPU) |
+| **Sparse graph** | Increasing slowness `O(V²)` | Far more efficient `O(E log V)` |
+| **Dense graph** | Similar performance | Slight heap overhead |
+| **Scalability** | Up to ~10,000 nodes | Up to 100,000+ nodes |
+| **CO₂ footprint** | Increased energy consumption | Lower emissions (lower CPU time) |
 
 ---
 
-## Stack Tecnológica
+## Technology Stack
 
 - [Python 3.10+](https://www.python.org/)
 - [NetworkX](https://networkx.org/)
 - [CodeCarbon](https://mlco2.github.io/codecarbon/)
 - [NumPy](https://numpy.org/)
 - [Matplotlib](https://matplotlib.org/)
-- [tqdm](https://tqdm.github.io/) (para barra de progresso)
+- [tqdm](https://tqdm.github.io/) (progress bar)
 
 ---
 
-## Como Executar
+## How to Run It:
 
 ```bash
-# Clone o repositório
+# Clone the repository
 git clone https://github.com/SEU-USUARIO/dijkstra-comparativo.git
 cd dijkstra-comparativo
 
-# Crie e ative um ambiente virtual (opcional)
+# Create and activate a virtual environment (optional)
 python -m venv venv
 source venv/bin/activate     # Linux/Mac
 venv\Scripts\activate        # Windows
 
-# Instale as dependências
+# Install dependencies
 pip install -r requirements.txt
 
-# Execute o notebook ou script principal
-jupyter notebook dijkstra_experimentos.ipynb
+# Run the notebook or main script
+jupyter notebook dijkstra_experiments.ipynb
