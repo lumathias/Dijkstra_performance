@@ -12,13 +12,14 @@ Computer Engineering – Universidade Federal do Rio Grande do Norte (UFRN)
 
 ## Objective
 
-This project compares the **performance** and **carbon footprint** of two implementations of the Dijkstra algorithm for computing shortest paths in **weighted directed graphs**:
+The central goal of this project is to **compare and quantify the performance and environmental impact differences** between two approaches of **Dijkstra’s Shortest Path Algorithm**:
 
-- **Classic Dijkstra:** complexity **O(V² + E)**  
-- **Dijkstra with Min-Heap:** complexity **O((V + E) log V)**  
+1. **Classic Dijkstra** (linear search–based implementation)  
+2. **Optimized Dijkstra with Min-Heap** (priority queue–based implementation)
 
+The analysis aims to **validate theoretical complexity gains** and **correlate them with the carbon footprint ($\text{CO}_2$)** emitted during execution.
 The experiments follow reproducible research guidelines and use **CodeCarbon** to estimate CO₂ emissions from computational usage.
-
+ 
 ---
 
 ## Problem Description
@@ -28,37 +29,43 @@ The goal is to analyze performance and environmental impact when processing **gr
 We used **NetworkX** to generate connected graphs and **CodeCarbon** to estimate energy-related emissions.
 
 ---
+## Methodology and Experimental Setup
 
-### Experiment Workflow
+To ensure **reproducibility**, the experiment followed the process below.
 
-1. **Graph Generation:**  
-   - Created using `nx.gnp_random_graph(n, p)` with random **positive weights (1–10)**.  
-   - Connectivity ensured via the graph’s **giant component**.
+### 🔹 Data Generation
 
-2. **Parameters:**
-   - **Graph sizes**: `[100, 500, 1,000, 5,000, 10,000, 50,000, 100,000]`
-   - **Repetitions:** 15–20 per graph size
-   - **Random Sources:** 5 random starting nodes per test
-   - **Fixed Seeds:** for reproducibility
+- **Graphs:** Directed, strongly connected, and weighted graphs (edge weights ∈ [1, 10]) were generated using **NetworkX**.  
+- **Graph Sizes:** Varied from **100 to 50,000 nodes**.  
+- **Sampling:** For each graph size, **15 repetitions** were performed, with **5 random source nodes** per repetition — totaling **75 runs per algorithm per size**.  
+- **Reproducibility:** A fixed random seed (`SEED = 42`) was used for both graph generation and node selection.
 
-3. **Metrics Collected:**
-   - **Execution Time (s)**
-   - **Estimated CO₂ emissions (kg)** via CodeCarbon
-   - **Statistical Measures:** mean and standard deviation
+### 🔹 Measurement and Comparison
+
+**Performance Metrics**
+- **Execution Time (s):** 3h43min Measured with system wall time.  
+
+**Algorithms Tested**
+- `classic`: Implementation with complexity $O(V^2 + E)$.  
+- `heap`: Implementation with complexity $O((V + E)\log V)$.  
+- `networkx`: Reference implementation from **NetworkX**.
+
+**Statistical Analysis**
+- Runs were compared using the **mean and standard deviation** of results for consistency and statistical rigor.
 
 ---
 
-## Experimental Setup
+## Experimental Configuration
 
-| Item              | Value |
-|--------------------|-------|
-| **Graph sizes**    | 100 – 100,000 nodes |
-| **Repetitions**    | 15–20 |
-| **Graph Generator**| `nx.gnp_random_graph(n, p)` |
-| **Weights**        | 1 to 10 |
-| **Connectivity**   | Giant component check |
-| **Fixed Seeds**    | For NumPy & random |
-| **Libraries**      | NetworkX, CodeCarbon, NumPy, Matplotlib, tqdm |
+| Parameter | Value |
+|------------|-------|
+| **Graph Sizes** | 100 to 50,000 nodes |
+| **Repetitions** | 15 per graph size, 5 random sources (75 runs total) |
+| **Graph Generator** | `nx.gnp_random_graph(n, p)` |
+| **Weights** | Integers from 1 to 10 |
+| **Connectivity** | Strongly connected component |
+| **Random Seed** | `SEED = 42` |
+| **Libraries** | NetworkX, CodeCarbon, NumPy, Matplotlib, tqdm |
 | **Python Version** | 3.10+ |
 
 ---
@@ -85,21 +92,27 @@ We used **NetworkX** to generate connected graphs and **CodeCarbon** to estimate
 
 ## Experimental Results
 
-> *(Fill in after running final experiments — you can include your results tables and interpretations below.)*
-
 ### Performance Comparison
-| Graph Size | Classic Dijkstra (s) | Min-Heap Dijkstra (s) | Speedup Factor |
-|-------------|----------------------|------------------------|----------------|
-| 100 | ... | ... | ... |
-| 1,000 | ... | ... | ... |
-| 10,000 | ... | ... | ... |
-| 100,000 | ... | ... | ... |
 
-### Carbon Footprint
+| Graph Size | Classic Dijkstra (s) | Min-Heap Dijkstra (s) | Speedup Factor |
+|:----------:|:--------------------:|:---------------------:|:--------------:|
+| **100**    | 0.000038             | 0.000243              | **0.16x** (slower) |
+| **500**    | 0.018321             | 0.005475              | **3.35x**      |
+| **1,000**  | 0.068125             | 0.017218              | **3.96x**      |
+| **5,000**  | 1.253174             | 0.129223              | **9.70x**      |
+| **10,000** | 5.659204             | 0.718862              | **7.87x**      |
+| **50,000** | 135.300812           | 0.908809              | **148.88x**    |
+
+### Carbon Footprint Comparison
+
 | Graph Size | Classic Dijkstra (kg CO₂) | Min-Heap Dijkstra (kg CO₂) | Reduction (%) |
-|-------------|----------------------------|-----------------------------|----------------|
-| 100 | ... | ... | ... |
-| 100,000 | ... | ... | ... |
+|:----------:|:-------------------------:|:--------------------------:|:-------------:|
+| **100**    | 2.08E-08                  | 2.80E-08                   | **-34.6%** (more) |
+| **500**    | 1.88E-07                  | 6.93E-08                   | **63.1%**     |
+| **1,000**  | 6.41E-07                  | 1.84E-07                   | **71.3%**     |
+| **5,000**  | 1.16E-05                  | 1.23E-06                   | **89.4%**     |
+| **10,000** | 5.22E-05                  | 6.75E-06                   | **87.1%**     |
+| **50,000** | 0.001264                  | 8.44E-06                   | **99.3%**     |
 
 **Observations:**
 - Runtime and emissions scale nonlinearly with graph size.  
@@ -110,7 +123,7 @@ We used **NetworkX** to generate connected graphs and **CodeCarbon** to estimate
 
 ## Visualization
 
-Below is an example of how you can visualize your results directly in the notebook or script:
+Below is an example of how the comparative charts were generated using Matplotlib, followed by the images:
 
 ```python
 plt.figure(figsize=(8, 4))
@@ -146,6 +159,24 @@ plt.show()
 
 ![CO2 Emissions Comparison](https://github.com/lumathias/Dijkstra_performance/issues/1#issuecomment-3459195598)
 
+---
+
+##  Results Analysis
+
+The following results, plotted on **log-log scale**, demonstrate the relationship between algorithmic complexity, execution performance, and energy consumption.
+
+### Execution Time (Time vs. Number of Nodes)
+- **Complexity Validation:** The **Classic** algorithm (blue curve) exhibits steep growth, confirming the expected **quadratic time complexity (O(V²))**.  
+- **Optimization Effect:** The **Min-Heap (orange)** and **NetworkX (green)** curves show a much smoother, near-log-linear growth pattern. The optimized version outperforms the classic one starting from **≈ 500 nodes**.  
+- **Reference Consistency:** The `networkx` implementation follows the same asymptotic trend as the Min-Heap version, serving as a reliable reference benchmark.
+
+### Carbon Footprint ($\text{CO}_2$ vs. Number of Nodes)
+- **Direct Correlation:** The $\text{CO}_2$ emission curve mirrors the execution time plot, confirming that carbon footprint is **directly proportional to computational time**.  
+- **Environmental Impact:** The **Classic** version consumes **orders of magnitude more $\text{CO}_2$** for larger graphs (e.g., 10⁴ nodes) than the **Min-Heap** version.  
+- **Practical Conclusion:** Algorithmic optimization is not only a performance improvement but also an effective **strategy for reducing energy consumption and environmental impact at scale**.
+
+---
+
 
 ## How to Run
 
@@ -170,8 +201,7 @@ jupyter notebook dijkstra_experiments.ipynb
 
 ## Video Presentation
 
-[🔗 **Watch the project demonstration video**](#)  
-*(Insert your video link here once available)*
+[ **Watch the project demonstration video**](#)  
 
 ---
 
@@ -180,4 +210,9 @@ jupyter notebook dijkstra_experiments.ipynb
 - NetworkX Documentation: [https://networkx.org/documentation/stable/](https://networkx.org/documentation/stable/)  
 - CodeCarbon Documentation: [https://mlco2.github.io/codecarbon/](https://mlco2.github.io/codecarbon/)  
 - Dijkstra, E. W. (1959). *A note on two problems in connexion with graphs*. Numerische Mathematik, 1, 269–271.
+
+---
+
+
+
 
